@@ -39,6 +39,7 @@ dependencies:
   sui: ^0.1.5
   markdown_widget: ^2.3.2+3
   another_flushbar: ^1.12.30
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:

@@ -18,4 +18,6 @@ class AppTheme {
   static const mdBackgroundColor = Color(0xFF24272E);
 
   static const mdTipColor = Color(0xFF515865);
+
+  static const borderColor = Color(0xFFBDBDBD);
 }

@@ -1,20 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sui/cryptography/ed25519_keypair.dart';
-import 'package:sui/sui_account.dart';
+import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/util/extension.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
 import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
 
-class StepOnePage extends StatelessWidget {
+class StepTwoPage extends StatelessWidget {
   final ZkLoginProvider provider;
 
   SuiAccount? get account => provider.account;
 
-  const StepOnePage({
+  const StepTwoPage({
     super.key,
     required this.provider,
   });
@@ -35,7 +34,12 @@ class StepOnePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              const BorderButton('Back', enable: false),
+              BorderButton(
+                'Back',
+                onPressed: () {
+                  provider.step = provider.step - 1;
+                },
+              ),
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
@@ -48,7 +52,7 @@ class StepOnePage extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           const Text(
-            'Step 1: Generate Ephemeral Key Pair',
+            'Step 2: Fetch JWT (from OpenID Provider)',
             style: TextStyle(
               color: AppTheme.textColor1,
               fontSize: 18,
@@ -56,8 +60,7 @@ class StepOnePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-          Wrap(
-            runSpacing: 0,
+          Row(
             children: [
               const Text(
                 'The ephemeral key pair is used to sign the ',
@@ -91,20 +94,31 @@ class StepOnePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-          _buttonView(),
+          ActiveButton(
+            'Fetch current Epoch (via Sui Client)',
+            onPressed: () {},
+          ),
+          ActiveButton(
+            'Generate randomness',
+            onPressed: () {},
+          ),
+          ActiveButton(
+            'Generate randomness',
+            onPressed: () {},
+          ),
           Markdown(
             '```dart\n'
-                '// PrivateKey\n'
-                '${_getPrivateKey()}'
-                '\n```',
+            '// PrivateKey\n'
+            '${_getPrivateKey()}'
+            '\n```',
           ),
           Container(
             transform: Matrix4.translationValues(0, -20, 0),
             child: Markdown(
               '```\n'
-                  '// PublicKey\n'
-                  '${_getPublicKey()}'
-                  '\n```',
+              '// PublicKey\n'
+              '${_getPublicKey()}'
+              '\n```',
             ),
           )
         ],
@@ -123,40 +137,5 @@ class StepOnePage extends StatelessWidget {
     if (account == null) return 'undefined';
     var publicKey = account!.getPublicKey().toBase64();
     return jsonEncode(publicKey);
-  }
-
-  _buttonView() {
-    return Wrap(
-      runSpacing: 15,
-      children: [
-        ActiveButton(
-          'Create random ephemeral KeyPair',
-          backgroundColor:
-          account == null ? AppTheme.buttonColor : AppTheme.unClickColor,
-          foregroundColor: account == null
-              ? AppTheme.clickTextColor
-              : AppTheme.unClickTextColor,
-          onPressed: account == null
-              ? () {
-            provider.account = SuiAccount(Ed25519Keypair());
-          }
-              : null,
-        ),
-        const SizedBox(width: 15),
-        ActiveButton(
-          'Clear ephemeral KeyPair',
-          backgroundColor:
-          account == null ? AppTheme.unClickColor : AppTheme.clickColor,
-          foregroundColor: account == null
-              ? AppTheme.unClickTextColor
-              : AppTheme.clickTextColor,
-          onPressed: account != null
-              ? () {
-            provider.account = null;
-          }
-              : null,
-        ),
-      ],
-    );
   }
 }
