@@ -40,6 +40,7 @@ dependencies:
   markdown_widget: ^2.3.2+3
   another_flushbar: ^1.12.30
   provider: ^6.1.1
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -64,9 +65,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

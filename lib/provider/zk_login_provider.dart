@@ -20,12 +20,21 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _epoch = '';
+  String _epoch = '0';
 
   String get epoch => _epoch;
 
   set epoch(String value) {
     _epoch = value;
+    notifyListeners();
+  }
+
+  String _randomness = '';
+
+  String get randomness => _randomness;
+
+  set randomness(String value) {
+    _randomness = value;
     notifyListeners();
   }
 
