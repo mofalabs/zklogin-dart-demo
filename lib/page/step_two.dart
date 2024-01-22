@@ -4,11 +4,14 @@ import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
+import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
 
 class StepTwoPage extends StatelessWidget {
   final ZkLoginProvider provider;
 
   SuiAccount? get account => provider.account;
+
+  bool get click => provider.epoch > 0 && provider.randomness.isNotEmpty;
 
   const StepTwoPage({
     super.key,
@@ -39,13 +42,13 @@ class StepTwoPage extends StatelessWidget {
   List get messages2 => [
         [
           'Current Epoch: ',
-          provider.epoch == '0'
+          provider.epoch == 0
               ? 'Click the button above to obtain'
-              : provider.epoch
+              : '${provider.epoch}'
         ],
         [
           'Assuming the validity period is set to 10 Epochs, then:',
-          'maxEpoch: ${provider.epoch}'
+          'maxEpoch: ${provider.epoch == 0 ? provider.epoch : provider.epoch + 10}'
         ],
       ];
 
@@ -103,17 +106,66 @@ class StepTwoPage extends StatelessWidget {
           Column(
               children:
                   messages2.map((e) => _getRowTexts(e, right: true)).toList()),
+          const Markdown(
+            '```dart\n'
+            '${"import 'package:sui/sui.dart';"}\n\n'
+            '// randomness\n'
+            'const randomness = generateRandomness();'
+            '\n```',
+          ),
           Wrap(
             alignment: WrapAlignment.center,
             runAlignment: WrapAlignment.center,
             children: [
               ActiveButton(
                 'Generate randomness',
-                onPressed: () {},
+                onPressed: () {
+                  provider.randomness = generateRandomness();
+                },
               ),
               const SizedBox(width: 15),
               _text2(
                 'randomness: ${provider.randomness}',
+                bottom: 0,
+                top: 9,
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          const Markdown(
+            '```dart\n'
+                '${"import 'package:sui/sui.dart';"}\n\n'
+                '// Generate Nonce for acquiring JWT\n'
+                'const nonce = generateNonce(\n'
+                '    ephemeralKeyPair.getPublicKey(),\n'
+                '    maxEpoch,\n'
+                '    randomness\n'
+                ');\n'
+                '\n```',
+          ),
+          Wrap(
+            alignment: WrapAlignment.center,
+            runAlignment: WrapAlignment.center,
+            children: [
+              ActiveButton(
+                'Generate Nonce',
+                backgroundColor:
+                    click ? AppTheme.buttonColor : AppTheme.unClickColor,
+                foregroundColor:
+                    click ? AppTheme.clickTextColor : AppTheme.unClickTextColor,
+                onPressed: click
+                    ? () {
+                        provider.nonce = generateNonce(
+                          account!.keyPair.getPublicKey(),
+                          provider.epoch + 10,
+                          provider.randomness,
+                        );
+                      }
+                    : null,
+              ),
+              const SizedBox(width: 15),
+              _text2(
+                'nonce: ${provider.nonce}',
                 bottom: 0,
                 top: 9,
               ),

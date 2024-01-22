@@ -20,11 +20,11 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _epoch = '0';
+  int _epoch = 0;
 
-  String get epoch => _epoch;
+  int get epoch => _epoch;
 
-  set epoch(String value) {
+  set epoch(int value) {
     _epoch = value;
     notifyListeners();
   }
@@ -38,9 +38,18 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _nonce = '';
+
+  String get nonce => _nonce;
+
+  set nonce(String value) {
+    _nonce = value;
+    notifyListeners();
+  }
+
   getCurrentEpoch() async {
     final result =
         await SuiClient(Constants.devnetAPI).getLatestSuiSystemState();
-    epoch = result.epoch;
+    epoch = int.parse(result.epoch);
   }
 }

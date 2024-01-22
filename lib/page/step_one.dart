@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:sui/cryptography/ed25519_keypair.dart';
@@ -94,17 +95,17 @@ class StepOnePage extends StatelessWidget {
           _buttonView(),
           Markdown(
             '```dart\n'
-                '// PrivateKey\n'
-                '${_getPrivateKey()}'
-                '\n```',
+            '// PrivateKey\n'
+            '${_getPrivateKey()}'
+            '\n```',
           ),
           Container(
             transform: Matrix4.translationValues(0, -20, 0),
             child: Markdown(
               '```\n'
-                  '// PublicKey\n'
-                  '${_getPublicKey()}'
-                  '\n```',
+              '// PublicKey\n'
+              '${_getPublicKey()}'
+              '\n```',
             ),
           )
         ],
@@ -132,28 +133,28 @@ class StepOnePage extends StatelessWidget {
         ActiveButton(
           'Create random ephemeral KeyPair',
           backgroundColor:
-          account == null ? AppTheme.buttonColor : AppTheme.unClickColor,
+              account == null ? AppTheme.buttonColor : AppTheme.unClickColor,
           foregroundColor: account == null
               ? AppTheme.clickTextColor
               : AppTheme.unClickTextColor,
           onPressed: account == null
               ? () {
-            provider.account = SuiAccount(Ed25519Keypair());
-          }
+                  provider.account = SuiAccount(Ed25519Keypair());
+                }
               : null,
         ),
         const SizedBox(width: 15),
         ActiveButton(
           'Clear ephemeral KeyPair',
           backgroundColor:
-          account == null ? AppTheme.unClickColor : AppTheme.clickColor,
+              account == null ? AppTheme.unClickColor : AppTheme.clickColor,
           foregroundColor: account == null
               ? AppTheme.unClickTextColor
               : AppTheme.clickTextColor,
           onPressed: account != null
               ? () {
-            provider.account = null;
-          }
+                  provider.account = null;
+                }
               : null,
         ),
       ],
