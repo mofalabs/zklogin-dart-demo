@@ -114,7 +114,7 @@ class StepTwoPage extends StatelessWidget {
             '\n```',
           ),
           Wrap(
-            alignment: WrapAlignment.center,
+            alignment: WrapAlignment.start,
             runAlignment: WrapAlignment.center,
             children: [
               ActiveButton(
@@ -144,7 +144,7 @@ class StepTwoPage extends StatelessWidget {
                 '\n```',
           ),
           Wrap(
-            alignment: WrapAlignment.center,
+            alignment: WrapAlignment.start,
             runAlignment: WrapAlignment.center,
             children: [
               ActiveButton(
