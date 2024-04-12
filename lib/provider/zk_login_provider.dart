@@ -49,7 +49,37 @@ class ZkLoginProvider extends ChangeNotifier {
 
   getCurrentEpoch() async {
     final result =
-        await SuiClient(Constants.devnetAPI).getLatestSuiSystemState();
+        await SuiClient(SuiUrls.devnet).getLatestSuiSystemState();
     epoch = int.parse(result.epoch);
+  }
+
+
+  /// Sign in with Apple
+  
+  String _jwt = '';
+
+  String get jwt => _jwt;
+
+  set jwt(String value) {
+    _jwt = value;
+    notifyListeners();
+  }
+
+  String _userIdentifier = '';
+
+  String get userIdentifier => _userIdentifier;
+
+  set userIdentifier(String value) {
+    _userIdentifier = value;
+    notifyListeners();
+  }
+
+  String _email = '';
+
+  String get email => _email;
+
+  set email(String value) {
+    _email = value;
+    notifyListeners();
   }
 }

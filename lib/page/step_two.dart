@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
 import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
+import 'package:zklogin/zklogin.dart' hide generateNonce;
 
 class StepTwoPage extends StatelessWidget {
   final ZkLoginProvider provider;
@@ -155,11 +157,12 @@ class StepTwoPage extends StatelessWidget {
                     click ? AppTheme.clickTextColor : AppTheme.unClickTextColor,
                 onPressed: click
                     ? () {
-                        provider.nonce = generateNonce(
-                          account!.keyPair.getPublicKey(),
-                          provider.epoch + 10,
-                          provider.randomness,
-                        );
+                        provider.nonce = generateNonce();
+                        // provider.nonce = generateNonce(
+                        //   account!.keyPair.getPublicKey(),
+                        //   provider.epoch + 10,
+                        //   provider.randomness,
+                        // );
                       }
                     : null,
               ),
@@ -172,15 +175,24 @@ class StepTwoPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 30),
-          _googleWidget(),
+          _signInWidget(),
         ],
       ),
     );
   }
 
-  _googleWidget() {
+  _signInWidget() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        final result = await SignInWithApple.getAppleIDCredential(
+          scopes: [AppleIDAuthorizationScopes.email],
+          nonce: provider.nonce,
+        );
+        
+        provider.jwt = result.identityToken ?? '';
+        provider.userIdentifier = result.userIdentifier ?? '';
+        provider.email = result.email ?? '';
+      },
       style: ElevatedButton.styleFrom(
         elevation: 0,
         shadowColor: Colors.transparent,
@@ -197,13 +209,13 @@ class StepTwoPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              'assets/google.svg',
+              'assets/apple.svg',
               width: 20,
               height: 20,
             ),
             const SizedBox(width: 15),
             const Text(
-              'Sign In With Google',
+              'Sign in with Apple',
               style: TextStyle(fontSize: 15),
             )
           ],
