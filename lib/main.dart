@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Consumer<ZkLoginProvider>(
         builder: (_, v, __) {
           return Scaffold(
+            appBar: AppBar(title: const Text('ZkLogin Demo')),
             body: SingleChildScrollView(
               child: Container(
                 margin: const EdgeInsets.symmetric(

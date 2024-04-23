@@ -143,7 +143,6 @@ class StepOnePage extends StatelessWidget {
                 }
               : null,
         ),
-        const SizedBox(width: 15),
         ActiveButton(
           'Clear ephemeral KeyPair',
           backgroundColor:

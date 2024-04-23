@@ -1,24 +1,34 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
+import 'package:sui_dart_zklogin_demo/page/google_sign_in_page.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
 import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
 import 'package:zklogin/zklogin.dart' hide generateNonce;
 
-class StepTwoPage extends StatelessWidget {
+class StepTwoPage extends StatefulWidget {
   final ZkLoginProvider provider;
-
-  SuiAccount? get account => provider.account;
-
-  bool get click => provider.epoch > 0 && provider.randomness.isNotEmpty;
 
   const StepTwoPage({
     super.key,
     required this.provider,
   });
+
+  @override
+  State<StepTwoPage> createState() => _StepTwoPageState();
+}
+
+class _StepTwoPageState extends State<StepTwoPage> {
+  SuiAccount? get account => widget.provider.account;
+
+  bool get click =>
+      widget.provider.epoch > 0 && widget.provider.randomness.isNotEmpty;
 
   List get messages => [
         'Required parameters:',
@@ -44,15 +54,18 @@ class StepTwoPage extends StatelessWidget {
   List get messages2 => [
         [
           'Current Epoch: ',
-          provider.epoch == 0
+          widget.provider.epoch == 0
               ? 'Click the button above to obtain'
-              : '${provider.epoch}'
+              : '${widget.provider.epoch}'
         ],
         [
           'Assuming the validity period is set to 10 Epochs, then:',
-          'maxEpoch: ${provider.epoch == 0 ? provider.epoch : provider.epoch + 10}'
+          'maxEpoch: ${widget.provider.epoch == 0 ? widget.provider.epoch : widget.provider.epoch + 10}'
         ],
       ];
+
+  // Google id token
+  var idToken = '';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +86,7 @@ class StepTwoPage extends StatelessWidget {
               BorderButton(
                 'Back',
                 onPressed: () {
-                  provider.step = provider.step - 1;
+                  widget.provider.step = widget.provider.step - 1;
                 },
               ),
               const SizedBox(width: 15),
@@ -81,7 +94,7 @@ class StepTwoPage extends StatelessWidget {
                 'Next',
                 enable: account != null,
                 onPressed: () {
-                  provider.step = provider.step + 1;
+                  widget.provider.step = widget.provider.step + 1;
                 },
               ),
             ],
@@ -101,7 +114,7 @@ class StepTwoPage extends StatelessWidget {
           ActiveButton(
             'Fetch current Epoch (via Sui Client)',
             onPressed: () {
-              provider.getCurrentEpoch();
+              widget.provider.getCurrentEpoch();
             },
           ),
           const SizedBox(height: 15),
@@ -122,12 +135,12 @@ class StepTwoPage extends StatelessWidget {
               ActiveButton(
                 'Generate randomness',
                 onPressed: () {
-                  provider.randomness = generateRandomness();
+                  widget.provider.randomness = generateRandomness();
                 },
               ),
               const SizedBox(width: 15),
               _text2(
-                'randomness: ${provider.randomness}',
+                'randomness: ${widget.provider.randomness}',
                 bottom: 0,
                 top: 9,
               ),
@@ -136,14 +149,14 @@ class StepTwoPage extends StatelessWidget {
           const SizedBox(height: 15),
           const Markdown(
             '```dart\n'
-                '${"import 'package:sui/sui.dart';"}\n\n'
-                '// Generate Nonce for acquiring JWT\n'
-                'const nonce = generateNonce(\n'
-                '    ephemeralKeyPair.getPublicKey(),\n'
-                '    maxEpoch,\n'
-                '    randomness\n'
-                ');\n'
-                '\n```',
+            '${"import 'package:sui/sui.dart';"}\n\n'
+            '// Generate Nonce for acquiring JWT\n'
+            'const nonce = generateNonce(\n'
+            '    ephemeralKeyPair.getPublicKey(),\n'
+            '    maxEpoch,\n'
+            '    randomness\n'
+            ');\n'
+            '\n```',
           ),
           Wrap(
             alignment: WrapAlignment.start,
@@ -157,7 +170,7 @@ class StepTwoPage extends StatelessWidget {
                     click ? AppTheme.clickTextColor : AppTheme.unClickTextColor,
                 onPressed: click
                     ? () {
-                        provider.nonce = generateNonce();
+                        widget.provider.nonce = generateNonce();
                         // provider.nonce = generateNonce(
                         //   account!.keyPair.getPublicKey(),
                         //   provider.epoch + 10,
@@ -168,30 +181,60 @@ class StepTwoPage extends StatelessWidget {
               ),
               const SizedBox(width: 15),
               _text2(
-                'nonce: ${provider.nonce}',
+                'nonce: ${widget.provider.nonce}',
                 bottom: 0,
                 top: 9,
               ),
             ],
           ),
           const SizedBox(height: 30),
-          _signInWidget(),
+          _signInWidget(context),
         ],
       ),
     );
   }
 
-  _signInWidget() {
+  _signInWidget(
+    BuildContext context,
+  ) {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.center,
+      runSpacing: 15,
+      children: [
+        if (!kIsWeb && Platform.isIOS)
+          _signInButton(context, 'apple.svg', 'Apple'),
+        _signInButton(context, 'google.svg', 'Google'),
+      ],
+    );
+  }
+
+  _signInButton(BuildContext context, String svg, String name) {
     return ElevatedButton(
       onPressed: () async {
-        final result = await SignInWithApple.getAppleIDCredential(
-          scopes: [AppleIDAuthorizationScopes.email],
-          nonce: provider.nonce,
-        );
-        
-        provider.jwt = result.identityToken ?? '';
-        provider.userIdentifier = result.userIdentifier ?? '';
-        provider.email = result.email ?? '';
+        if (name == 'Apple') {
+          final result = await SignInWithApple.getAppleIDCredential(
+            scopes: [AppleIDAuthorizationScopes.email],
+            nonce: widget.provider.nonce,
+          );
+          widget.provider.jwt = result.identityToken ?? '';
+          widget.provider.userIdentifier = result.userIdentifier ?? '';
+          widget.provider.email = result.email ?? '';
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GoogleSignInPage(
+                nonce: widget.provider.nonce,
+                idToken: idToken,
+              ),
+            ),
+          ).then((value) {
+            if (value is String) {
+              idToken = value;
+            }
+          });
+        }
       },
       style: ElevatedButton.styleFrom(
         elevation: 0,
@@ -209,14 +252,14 @@ class StepTwoPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              'assets/apple.svg',
+              'assets/$svg',
               width: 20,
               height: 20,
             ),
             const SizedBox(width: 15),
-            const Text(
-              'Sign in with Apple',
-              style: TextStyle(fontSize: 15),
+            Text(
+              'Sign in with $name',
+              style: const TextStyle(fontSize: 15),
             )
           ],
         ),
