@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:sui/sui.dart';
@@ -66,6 +67,8 @@ class _StepTwoPageState extends State<StepTwoPage> {
 
   // Google id token
   var idToken = '';
+
+  FlutterMacOSWebView? macOsWebView;
 
   @override
   Widget build(BuildContext context) {
@@ -221,19 +224,21 @@ class _StepTwoPageState extends State<StepTwoPage> {
           widget.provider.userIdentifier = result.userIdentifier ?? '';
           widget.provider.email = result.email ?? '';
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GoogleSignInPage(
-                nonce: widget.provider.nonce,
-                idToken: idToken,
-              ),
-            ),
-          ).then((value) {
-            if (value is String) {
-              idToken = value;
-            }
-          });
+          Platform.isMacOS
+              ? _showMacOsWeb()
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GoogleSignInPage(
+                      nonce: widget.provider.nonce,
+                      idToken: idToken,
+                    ),
+                  ),
+                ).then((value) {
+                  if (value is String) {
+                    idToken = value;
+                  }
+                });
         }
       },
       style: ElevatedButton.styleFrom(
@@ -264,6 +269,40 @@ class _StepTwoPageState extends State<StepTwoPage> {
           ],
         ),
       ),
+    );
+  }
+
+  _showMacOsWeb() async {
+    String redirectUrl = 'https%3A%2F%2Fmofalabs.com';
+    String replaceUrl = 'https://mofalabs.com/#id_token=';
+    var clientId =
+        '953150391626-q6id9af1j52h14lu226d7n40lrgrnbj7.apps.googleusercontent.com';
+    var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
+        'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
+        '&scope=openid&nonce=${widget.provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
+        '&flowName=GeneralOAuthFlow&id_token=$idToken';
+
+    macOsWebView = FlutterMacOSWebView(
+      onPageFinished: (url) async {
+        if (url.toString().startsWith(replaceUrl)) {
+          String temp = url!.replaceAll(replaceUrl, '');
+          idToken = temp.substring(0, temp.indexOf('&'));
+          print('idToken-----$idToken');
+          macOsWebView?.close();
+        }
+      },
+      onWebResourceError: (err) {
+        debugPrint(
+          'Error: ${err.errorCode}, ${err.errorType}, ${err.domain}, ${err.description}',
+        );
+      },
+    );
+
+    await macOsWebView?.open(
+      url: url,
+      presentationStyle: PresentationStyle.modal,
+      size: const Size(900.0, 600.0),
+      userAgent: 'Mofa Web3',
     );
   }
 

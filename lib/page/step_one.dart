@@ -128,6 +128,7 @@ class StepOnePage extends StatelessWidget {
 
   _buttonView() {
     return Wrap(
+      spacing: 15,
       runSpacing: 15,
       children: [
         ActiveButton(
