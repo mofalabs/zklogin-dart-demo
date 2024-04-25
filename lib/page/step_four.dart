@@ -163,9 +163,9 @@ class _StepFourPageState extends State<StepFourPage> {
           ),
           const Markdown(
             '```dart\n'
-                '${"import 'package:zklogin/zklogin.dart';"}\n\n'
-                'var salt = generateRandomness();\n'
-                '\n```',
+            '${"import 'package:zklogin/zklogin.dart';"}\n\n'
+            'var salt = generateRandomness();\n'
+            '\n```',
           ),
           const SizedBox(height: 20),
         ],

@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Consumer<ZkLoginProvider>(
         builder: (_, v, __) {
           return Scaffold(
-            appBar: AppBar(title: const Text('ZkLogin Demo')),
+            appBar: AppBar(title: const Text('Sui zkLogin Dart Demo')),
             body: SingleChildScrollView(
               child: Container(
                 margin: const EdgeInsets.symmetric(

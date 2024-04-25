@@ -3,16 +3,54 @@ import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
+import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
+import 'package:zklogin/address.dart';
 
-class StepFivePage extends StatelessWidget {
+class StepFivePage extends StatefulWidget {
   final ZkLoginProvider provider;
-
-  SuiAccount? get account => provider.account;
 
   const StepFivePage({
     super.key,
     required this.provider,
   });
+
+  @override
+  State<StepFivePage> createState() => _StepFivePageState();
+}
+
+class _StepFivePageState extends State<StepFivePage> {
+  ZkLoginProvider get provider => widget.provider;
+
+  SuiAccount? get account => provider.account;
+
+  final texts = [
+    "The user's Sui address is determined by",
+    "sub",
+    ",",
+    "iss",
+    ",",
+    "aud",
+    "and",
+    "user_salt",
+    "together. For the same JWT,",
+    "sub",
+    ",",
+    "iss",
+    ",",
+    "and",
+    "aud",
+    "will not change with each login.",
+  ];
+
+  final _indexes = [1, 3, 5, 7];
+
+  @override
+  void initState() {
+    super.initState();
+    provider.address =
+        jwtToAddress(provider.googleIdToken, BigInt.parse(provider.salt));
+    provider.getBalance();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +81,7 @@ class StepFivePage extends StatelessWidget {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: account != null,
+                enable: provider.address.isNotEmpty,
                 onPressed: () {
                   provider.step = provider.step + 1;
                 },
@@ -59,8 +97,124 @@ class StepFivePage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
+          _buildTexts(),
+          _code(),
+          _buttonWidget(),
+          const SizedBox(height: 15),
+          _addressWidget(),
+          const SizedBox(height: 15),
+          _balanceWidget(),
+          const SizedBox(height: 20),
         ],
+      ),
+    );
+  }
+
+  _code() {
+    return const Markdown(
+      '```dart\n'
+      '${"import 'package:zklogin/zklogin.dart';"}\n\n'
+      '/// [jwt] google id_token\n'
+      'var address = jwtToAddress(jwt, BigInt.parse(salt));\n'
+      '\n```',
+    );
+  }
+
+  _addressWidget() {
+    return Wrap(
+      spacing: 3,
+      runSpacing: 5,
+      children: [
+        _text('User Sui Address: '),
+        if (provider.address.isNotEmpty) _text2(provider.address),
+      ],
+    );
+  }
+
+  _balanceWidget() {
+    return Wrap(
+      spacing: 3,
+      runSpacing: 5,
+      children: [
+        _text('Balance: '),
+        if (provider.address.isNotEmpty)
+          _text2(
+            '${(provider.balance ?? BigInt.zero) / BigInt.from(10).pow(9)} SUI',
+          ),
+      ],
+    );
+  }
+
+  _buttonWidget() {
+    return Wrap(
+      spacing: 15,
+      runSpacing: 15,
+      children: [
+        ActiveButton(
+          'Generate Sui Address',
+          onPressed: provider.address.isNotEmpty
+              ? null
+              : () {
+                  provider.address = jwtToAddress(
+                    provider.googleIdToken,
+                    BigInt.parse(provider.salt),
+                  );
+                  provider.getBalance();
+                },
+        ),
+        ActiveButton(
+          provider.requestingFaucet ? 'Requesting' : 'Request Test SUI Token',
+          onPressed: provider.address.isEmpty
+              ? null
+              : () {
+                  provider.requestFaucet(context);
+                },
+        ),
+      ],
+    );
+  }
+
+  _buildTexts() {
+    return Wrap(
+      spacing: 3,
+      runSpacing: 5,
+      children: texts.map((value) {
+        var index = texts.indexOf(value);
+        return _indexes.contains(index) ? _text2(value) : _text(value, true);
+      }).toList(),
+    );
+  }
+
+  Widget _text(text, [bool needPadding = false]) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: needPadding ? 2 : 0,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: AppTheme.textColor2,
+          fontSize: 15,
+        ),
+      ),
+    );
+  }
+
+  Widget _text2(text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 5,
+        vertical: 2,
+      ),
+      margin: const EdgeInsets.only(right: 5),
+      color: const Color(0xFFFFEDCF),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: AppTheme.textColor1,
+          fontSize: 15,
+        ),
       ),
     );
   }
