@@ -1,4 +1,4 @@
-# sui_dart_zklogin_demo
+# sui-dart-zklogin-demo
 
 A new Flutter project.
 

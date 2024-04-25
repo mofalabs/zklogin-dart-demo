@@ -65,9 +65,6 @@ class _StepTwoPageState extends State<StepTwoPage> {
         ],
       ];
 
-  // Google id token
-  var idToken = '';
-
   FlutterMacOSWebView? macOsWebView;
 
   @override
@@ -95,7 +92,8 @@ class _StepTwoPageState extends State<StepTwoPage> {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: account != null,
+                enable:
+                    account != null && widget.provider.googleIdToken.isNotEmpty,
                 onPressed: () {
                   widget.provider.step = widget.provider.step + 1;
                 },
@@ -134,6 +132,8 @@ class _StepTwoPageState extends State<StepTwoPage> {
           Wrap(
             alignment: WrapAlignment.start,
             runAlignment: WrapAlignment.center,
+            runSpacing: 15,
+            spacing: 15,
             children: [
               ActiveButton(
                 'Generate randomness',
@@ -141,7 +141,6 @@ class _StepTwoPageState extends State<StepTwoPage> {
                   widget.provider.randomness = generateRandomness();
                 },
               ),
-              const SizedBox(width: 15),
               _text2(
                 'randomness: ${widget.provider.randomness}',
                 bottom: 0,
@@ -224,19 +223,19 @@ class _StepTwoPageState extends State<StepTwoPage> {
           widget.provider.userIdentifier = result.userIdentifier ?? '';
           widget.provider.email = result.email ?? '';
         } else {
-          Platform.isMacOS
+          !kIsWeb && Platform.isMacOS
               ? _showMacOsWeb()
               : Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => GoogleSignInPage(
                       nonce: widget.provider.nonce,
-                      idToken: idToken,
+                      idToken: widget.provider.googleIdToken,
                     ),
                   ),
                 ).then((value) {
                   if (value is String) {
-                    idToken = value;
+                    widget.provider.googleIdToken = value;
                   }
                 });
         }
@@ -280,15 +279,15 @@ class _StepTwoPageState extends State<StepTwoPage> {
     var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
         'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
         '&scope=openid&nonce=${widget.provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=$idToken';
+        '&flowName=GeneralOAuthFlow&id_token=${widget.provider.googleIdToken}';
 
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
         if (url.toString().startsWith(replaceUrl)) {
           String temp = url!.replaceAll(replaceUrl, '');
-          idToken = temp.substring(0, temp.indexOf('&'));
-          print('idToken-----$idToken');
+          widget.provider.googleIdToken = temp.substring(0, temp.indexOf('&'));
           macOsWebView?.close();
+          widget.provider.step = widget.provider.step + 1;
         }
       },
       onWebResourceError: (err) {
@@ -352,7 +351,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
       child: Text(
         text,
         style: const TextStyle(
-          color: AppTheme.textColor1,
+          color: AppTheme.textColor2,
           fontSize: 15,
         ),
       ),

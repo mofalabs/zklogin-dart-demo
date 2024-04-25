@@ -1,18 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
+import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
+import 'package:zklogin/address.dart';
 
-class StepThreePage extends StatelessWidget {
+class StepThreePage extends StatefulWidget {
   final ZkLoginProvider provider;
-
-  SuiAccount? get account => provider.account;
 
   const StepThreePage({
     super.key,
     required this.provider,
   });
+
+  @override
+  State<StepThreePage> createState() => _StepThreePageState();
+}
+
+class _StepThreePageState extends State<StepThreePage> {
+  ZkLoginProvider get provider => widget.provider;
+
+  SuiAccount? get account => provider.account;
+
+  String get googleIdToken => provider.googleIdToken;
+
+  Map jwt = {};
+
+  @override
+  void initState() {
+    super.initState();
+    jwt = decodeJwt(googleIdToken);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +80,46 @@ class StepThreePage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 30),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+                color: Color(0xFFECEFF1),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('// id Token'),
+                const SizedBox(height: 5),
+                Text(
+                  googleIdToken,
+                  style: TextStyle(
+                    height: 1.4,
+                    color: Colors.green.withOpacity(0.9),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Text(
+            'get JWT Payload',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const Markdown(
+            '```dart\n'
+            '${"import 'package:sui/sui.dart';"}\n\n'
+            'Map jwt = decodeJwt(googleIdToken);\n'
+            '\n```',
+          ),
+          const Text(
+            'JWT Payload',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Markdown(
+            '```json \n'
+            '${const JsonEncoder.withIndent('  ').convert(jwt)}\n'
+            '\n```',
+          ),
         ],
       ),
     );

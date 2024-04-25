@@ -63,7 +63,7 @@ class StepOnePage extends StatelessWidget {
               const Text(
                 'The ephemeral key pair is used to sign the ',
                 style: TextStyle(
-                  color: AppTheme.textColor1,
+                  color: AppTheme.textColor2,
                   fontSize: 15,
                 ),
               ),
@@ -87,7 +87,7 @@ class StepOnePage extends StatelessWidget {
           const Text(
             'Stored in the browser session. (Session Storage)',
             style: TextStyle(
-              color: AppTheme.textColor1,
+              color: AppTheme.textColor2,
               fontSize: 15,
             ),
           ),

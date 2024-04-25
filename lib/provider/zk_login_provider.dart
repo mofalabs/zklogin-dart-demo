@@ -47,6 +47,17 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _salt = '';
+
+  String get salt => _salt;
+
+  set salt(String value) {
+    _salt = value;
+    notifyListeners();
+  }
+  
+  String googleIdToken = '';
+
   getCurrentEpoch() async {
     final result =
         await SuiClient(SuiUrls.devnet).getLatestSuiSystemState();

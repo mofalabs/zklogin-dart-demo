@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const textColor1 = Color(0xFF060A17);
 
+  static const textColor2 = Color(0xFF333333);
+
   static const dividerColor = Color(0xFFC4CFDD);
 
   static const unClickColor = Color(0xFFE0E0E0);
