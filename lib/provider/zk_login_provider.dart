@@ -195,7 +195,7 @@ class ZkLoginProvider extends ChangeNotifier {
     if (requesting) return;
     requesting = true;
     try {
-      final body = {
+      final param = {
         "jwt": googleIdToken,
         "extendedEphemeralPublicKey": extendedEphemeralPublicKey,
         "maxEpoch": maxEpoch,
@@ -203,8 +203,11 @@ class ZkLoginProvider extends ChangeNotifier {
         "salt": salt,
         "keyClaimName": "sub",
       };
-      final data =
-          await Dio().post('https://prover-dev.mystenlabs.com/v1/contract/getZkProof', data: body);
+
+      final data = await Dio().post(
+        'https://prover-dev.mystenlabs.com/v1',
+        data: param,
+      );
       zkProof = data.data;
     } catch (e) {
       if (context.mounted) {

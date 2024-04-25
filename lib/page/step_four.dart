@@ -23,7 +23,9 @@ class _StepFourPageState extends State<StepFourPage> {
   @override
   void initState() {
     super.initState();
-    provider.salt = generateRandomness();
+    if (provider.salt.isEmpty) {
+      provider.salt = generateRandomness();
+    }
   }
 
   @override

@@ -275,7 +275,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
     var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
         'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
         '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=${provider.googleIdToken}';
+        '&flowName=GeneralOAuthFlow';
 
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
