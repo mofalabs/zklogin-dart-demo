@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sui/sui.dart';
-import 'package:sui/sui_account.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';

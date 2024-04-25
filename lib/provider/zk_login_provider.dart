@@ -100,7 +100,7 @@ class ZkLoginProvider extends ChangeNotifier {
   String googleIdToken = '';
 
   getCurrentEpoch() async {
-    final result = await SuiClient(SuiUrls.devnet).getLatestSuiSystemState();
+    final result = await suiClient.getLatestSuiSystemState();
     maxEpoch = int.parse(result.epoch);
   }
 
@@ -191,20 +191,27 @@ class ZkLoginProvider extends ChangeNotifier {
     ).show(context);
   }
 
-  getZkProof() async {
+  getZkProof(BuildContext context) async {
     if (requesting) return;
     requesting = true;
-    final body = {
-      "jwt": googleIdToken,
-      "extendedEphemeralPublicKey": extendedEphemeralPublicKey,
-      "maxEpoch": maxEpoch,
-      "jwtRandomness": randomness,
-      "salt": salt,
-      "keyClaimName": "sub",
-    };
-    final data =
-        await Dio().post('https://prover-dev.mystenlabs.com/v1', data: body);
-    requesting = false;
-    zkProof = data.data;
+    try {
+      final body = {
+        "jwt": googleIdToken,
+        "extendedEphemeralPublicKey": extendedEphemeralPublicKey,
+        "maxEpoch": maxEpoch,
+        "jwtRandomness": randomness,
+        "salt": salt,
+        "keyClaimName": "sub",
+      };
+      final data =
+          await Dio().post('https://prover-dev.mystenlabs.com/v1/contract/getZkProof', data: body);
+      zkProof = data.data;
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
+    } finally {
+      requesting = false;
+    }
   }
 }

@@ -41,6 +41,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final controller = ScrollController();
+
   final ZkLoginProvider provider = ZkLoginProvider();
 
   List<String> steps = [
@@ -64,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return Scaffold(
             appBar: AppBar(title: const Text('Sui zkLogin Dart Demo')),
             body: SingleChildScrollView(
+              controller: controller,
               child: Container(
                 margin: EdgeInsets.symmetric(
                   vertical: isMobile ? 20 : 40,

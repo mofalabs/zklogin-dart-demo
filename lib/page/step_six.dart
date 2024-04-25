@@ -99,7 +99,7 @@ class _StepSixPageState extends State<StepSixPage> {
             provider.requesting ? 'Fetching' : 'Fetch ZK Proof',
             onPressed: provider.extendedEphemeralPublicKey.isNotEmpty
                 ? () {
-                    provider.getZkProof();
+                    provider.getZkProof(context);
                   }
                 : null,
           ),
