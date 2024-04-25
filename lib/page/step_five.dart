@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
@@ -20,8 +19,6 @@ class StepFivePage extends StatefulWidget {
 
 class _StepFivePageState extends State<StepFivePage> {
   ZkLoginProvider get provider => widget.provider;
-
-  SuiAccount? get account => provider.account;
 
   final texts = [
     "The user's Sui address is determined by",
@@ -164,7 +161,7 @@ class _StepFivePageState extends State<StepFivePage> {
                 },
         ),
         ActiveButton(
-          provider.requestingFaucet ? 'Requesting' : 'Request Test SUI Token',
+          provider.requesting ? 'Requesting' : 'Request Test SUI Token',
           onPressed: provider.address.isEmpty
               ? null
               : () {

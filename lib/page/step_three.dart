@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
@@ -22,8 +21,6 @@ class StepThreePage extends StatefulWidget {
 
 class _StepThreePageState extends State<StepThreePage> {
   ZkLoginProvider get provider => widget.provider;
-
-  SuiAccount? get account => provider.account;
 
   String get googleIdToken => provider.googleIdToken;
 
@@ -64,7 +61,7 @@ class _StepThreePageState extends State<StepThreePage> {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: account != null,
+                enable: provider.googleIdToken.isNotEmpty,
                 onPressed: () {
                   provider.step = provider.step + 1;
                 },

@@ -26,10 +26,11 @@ class StepTwoPage extends StatefulWidget {
 }
 
 class _StepTwoPageState extends State<StepTwoPage> {
-  SuiAccount? get account => widget.provider.account;
+  ZkLoginProvider get provider => widget.provider;
 
-  bool get click =>
-      widget.provider.epoch > 0 && widget.provider.randomness.isNotEmpty;
+  SuiAccount? get account => provider.account;
+
+  bool get click => provider.maxEpoch > 0 && provider.randomness.isNotEmpty;
 
   List get messages => [
         'Required parameters:',
@@ -55,13 +56,13 @@ class _StepTwoPageState extends State<StepTwoPage> {
   List get messages2 => [
         [
           'Current Epoch: ',
-          widget.provider.epoch == 0
+          provider.maxEpoch == 0
               ? 'Click the button above to obtain'
-              : '${widget.provider.epoch}'
+              : '${provider.maxEpoch}'
         ],
         [
           'Assuming the validity period is set to 10 Epochs, then:',
-          'maxEpoch: ${widget.provider.epoch == 0 ? widget.provider.epoch : widget.provider.epoch + 10}'
+          'maxEpoch: ${provider.maxEpoch == 0 ? provider.maxEpoch : provider.maxEpoch + 10}'
         ],
       ];
 
@@ -86,16 +87,15 @@ class _StepTwoPageState extends State<StepTwoPage> {
               BorderButton(
                 'Back',
                 onPressed: () {
-                  widget.provider.step = widget.provider.step - 1;
+                  provider.step = provider.step - 1;
                 },
               ),
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable:
-                    account != null && widget.provider.googleIdToken.isNotEmpty,
+                enable: account != null && provider.googleIdToken.isNotEmpty,
                 onPressed: () {
-                  widget.provider.step = widget.provider.step + 1;
+                  provider.step = provider.step + 1;
                 },
               ),
             ],
@@ -115,7 +115,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
           ActiveButton(
             'Fetch current Epoch (via Sui Client)',
             onPressed: () {
-              widget.provider.getCurrentEpoch();
+              provider.getCurrentEpoch();
             },
           ),
           const SizedBox(height: 15),
@@ -138,11 +138,11 @@ class _StepTwoPageState extends State<StepTwoPage> {
               ActiveButton(
                 'Generate randomness',
                 onPressed: () {
-                  widget.provider.randomness = generateRandomness();
+                  provider.randomness = generateRandomness();
                 },
               ),
               _text2(
-                'randomness: ${widget.provider.randomness}',
+                'randomness: ${provider.randomness}',
                 bottom: 0,
                 top: 9,
               ),
@@ -172,18 +172,13 @@ class _StepTwoPageState extends State<StepTwoPage> {
                     click ? AppTheme.clickTextColor : AppTheme.unClickTextColor,
                 onPressed: click
                     ? () {
-                        widget.provider.nonce = generateNonce();
-                        // provider.nonce = generateNonce(
-                        //   account!.keyPair.getPublicKey(),
-                        //   provider.epoch + 10,
-                        //   provider.randomness,
-                        // );
+                        provider.nonce = generateNonce();
                       }
                     : null,
               ),
               const SizedBox(width: 15),
               _text2(
-                'nonce: ${widget.provider.nonce}',
+                'nonce: ${provider.nonce}',
                 bottom: 0,
                 top: 9,
               ),
@@ -217,11 +212,11 @@ class _StepTwoPageState extends State<StepTwoPage> {
         if (name == 'Apple') {
           final result = await SignInWithApple.getAppleIDCredential(
             scopes: [AppleIDAuthorizationScopes.email],
-            nonce: widget.provider.nonce,
+            nonce: provider.nonce,
           );
-          widget.provider.jwt = result.identityToken ?? '';
-          widget.provider.userIdentifier = result.userIdentifier ?? '';
-          widget.provider.email = result.email ?? '';
+          provider.jwt = result.identityToken ?? '';
+          provider.userIdentifier = result.userIdentifier ?? '';
+          provider.email = result.email ?? '';
         } else {
           !kIsWeb && Platform.isMacOS
               ? _showMacOsWeb()
@@ -229,13 +224,14 @@ class _StepTwoPageState extends State<StepTwoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => GoogleSignInPage(
-                      nonce: widget.provider.nonce,
-                      idToken: widget.provider.googleIdToken,
+                      nonce: provider.nonce,
+                      idToken: provider.googleIdToken,
                     ),
                   ),
                 ).then((value) {
                   if (value is String) {
-                    widget.provider.googleIdToken = value;
+                    provider.googleIdToken = value;
+                    provider.step = provider.step + 1;
                   }
                 });
         }
@@ -278,16 +274,16 @@ class _StepTwoPageState extends State<StepTwoPage> {
         '953150391626-q6id9af1j52h14lu226d7n40lrgrnbj7.apps.googleusercontent.com';
     var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
         'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
-        '&scope=openid&nonce=${widget.provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=${widget.provider.googleIdToken}';
+        '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
+        '&flowName=GeneralOAuthFlow&id_token=${provider.googleIdToken}';
 
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
         if (url.toString().startsWith(replaceUrl)) {
           String temp = url!.replaceAll(replaceUrl, '');
-          widget.provider.googleIdToken = temp.substring(0, temp.indexOf('&'));
+          provider.googleIdToken = temp.substring(0, temp.indexOf('&'));
           macOsWebView?.close();
-          widget.provider.step = widget.provider.step + 1;
+          provider.step = provider.step + 1;
         }
       },
       onWebResourceError: (err) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
@@ -51,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
     'Assemble zkLogin signature',
   ];
 
+  bool get isMobile => Platform.isIOS || Platform.isAndroid;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -61,9 +65,9 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(title: const Text('Sui zkLogin Dart Demo')),
             body: SingleChildScrollView(
               child: Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 30,
+                margin: EdgeInsets.symmetric(
+                  vertical: isMobile ? 20 : 40,
+                  horizontal: isMobile ? 15 : 30,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

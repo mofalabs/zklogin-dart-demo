@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
@@ -24,12 +25,12 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _epoch = 0;
+  int _maxEpoch = 0;
 
-  int get epoch => _epoch;
+  int get maxEpoch => _maxEpoch;
 
-  set epoch(int value) {
-    _epoch = value;
+  set maxEpoch(int value) {
+    _maxEpoch = value;
     notifyListeners();
   }
 
@@ -69,6 +70,15 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _extendedEphemeralPublicKey = '';
+
+  String get extendedEphemeralPublicKey => _extendedEphemeralPublicKey;
+
+  set extendedEphemeralPublicKey(String value) {
+    _extendedEphemeralPublicKey = value;
+    notifyListeners();
+  }
+
   BigInt? _balance;
 
   BigInt? get balance => _balance;
@@ -78,12 +88,12 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _requestingFaucet = false;
+  bool _requesting = false;
 
-  bool get requestingFaucet => _requestingFaucet;
+  bool get requesting => _requesting;
 
-  set requestingFaucet(bool value) {
-    _requestingFaucet = value;
+  set requesting(bool value) {
+    _requesting = value;
     notifyListeners();
   }
 
@@ -91,7 +101,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   getCurrentEpoch() async {
     final result = await SuiClient(SuiUrls.devnet).getLatestSuiSystemState();
-    epoch = int.parse(result.epoch);
+    maxEpoch = int.parse(result.epoch);
   }
 
   /// Sign in with Apple
@@ -123,6 +133,15 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _zkProof = '';
+
+  String get zkProof => _zkProof;
+
+  set zkProof(String value) {
+    _zkProof = value;
+    notifyListeners();
+  }
+
   getBalance() {
     if (address.isNotEmpty) {
       suiClient.getBalance(address).then((res) {
@@ -132,11 +151,11 @@ class ZkLoginProvider extends ChangeNotifier {
   }
 
   void requestFaucet(BuildContext context) async {
-    if (requestingFaucet) return;
+    if (requesting) return;
     var resp = await suiClient.getBalance(address);
     balance = resp.totalBalance;
     if (balance! <= BigInt.zero) {
-      requestingFaucet = true;
+      requesting = true;
       try {
         final faucet = FaucetClient(SuiUrls.faucetDev);
         final faucetResp = await faucet.requestSuiFromFaucetV1(address);
@@ -156,7 +175,7 @@ class ZkLoginProvider extends ChangeNotifier {
           showSnackBar(context, e.toString());
         }
       } finally {
-        requestingFaucet = false;
+        requesting = false;
       }
     }
 
@@ -170,5 +189,22 @@ class ZkLoginProvider extends ChangeNotifier {
       message: title,
       duration: Duration(seconds: seconds),
     ).show(context);
+  }
+
+  getZkProof() async {
+    if (requesting) return;
+    requesting = true;
+    final body = {
+      "jwt": googleIdToken,
+      "extendedEphemeralPublicKey": extendedEphemeralPublicKey,
+      "maxEpoch": maxEpoch,
+      "jwtRandomness": randomness,
+      "salt": salt,
+      "keyClaimName": "sub",
+    };
+    final data =
+        await Dio().post('https://prover-dev.mystenlabs.com/v1', data: body);
+    requesting = false;
+    zkProof = data.data;
   }
 }

@@ -22,8 +22,6 @@ class StepFourPage extends StatefulWidget {
 class _StepFourPageState extends State<StepFourPage> {
   ZkLoginProvider get provider => widget.provider;
 
-  SuiAccount? get account => provider.account;
-
   @override
   void initState() {
     super.initState();
