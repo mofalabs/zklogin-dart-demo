@@ -4,14 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart' hide generateNonce;
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/page/google_sign_in_page.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
 import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
-import 'package:zklogin/zklogin.dart' hide generateNonce;
+import 'package:zklogin/zklogin.dart';
 
 class StepTwoPage extends StatefulWidget {
   final ZkLoginProvider provider;
@@ -172,7 +172,11 @@ class _StepTwoPageState extends State<StepTwoPage> {
                     click ? AppTheme.clickTextColor : AppTheme.unClickTextColor,
                 onPressed: click
                     ? () {
-                        provider.nonce = generateNonce();
+                        provider.nonce = generateNonce(
+                          account!.keyPair.getPublicKey(), 
+                          provider.maxEpoch, 
+                          provider.randomness
+                        );
                       }
                     : null,
               ),

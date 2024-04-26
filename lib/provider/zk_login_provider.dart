@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
+import 'package:zklogin/zklogin.dart';
 
 class ZkLoginProvider extends ChangeNotifier {
   final suiClient = SuiClient(SuiUrls.devnet);
@@ -67,7 +68,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set address(String value) {
     _address = value;
-    notifyListeners();
+    // notifyListeners();
   }
 
   String _extendedEphemeralPublicKey = '';
@@ -133,11 +134,11 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _zkProof = '';
+  Map _zkProof = {};
 
-  String get zkProof => _zkProof;
+  Map get zkProof => _zkProof;
 
-  set zkProof(String value) {
+  set zkProof(Map value) {
     _zkProof = value;
     notifyListeners();
   }
@@ -211,7 +212,7 @@ class ZkLoginProvider extends ChangeNotifier {
       zkProof = data.data;
     } catch (e) {
       if (context.mounted) {
-        showSnackBar(context, e.toString());
+        showSnackBar(context, e.toString(), seconds: 6);
       }
     } finally {
       requesting = false;

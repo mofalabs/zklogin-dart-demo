@@ -83,7 +83,6 @@ class _StepSixPageState extends State<StepSixPage> {
           ActiveButton(
             'Generate the extended ephemeral public key',
             onPressed: () {
-              provider.account ??= SuiAccount(Ed25519Keypair());
               provider.extendedEphemeralPublicKey =
                   getExtendedEphemeralPublicKey(
                 provider.account!.keyPair.getPublicKey(),
@@ -132,8 +131,7 @@ class _StepSixPageState extends State<StepSixPage> {
       '```dart\n'
       '${"import 'package:sui/sui.dart';"}\n'
       '${"import 'package:zklogin/zklogin.dart';"}\n\n'
-      'var keyPair = Ed25519Keypair();\n'
-      'var extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(keyPair.getPublicKey();\n'
+      'var extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(ephemeralKeyPair.getPublicKey();\n'
       '\n```',
     );
   }
