@@ -116,7 +116,7 @@ class StepOnePage extends StatelessWidget {
   _getPrivateKey() {
     if (account == null) return 'undefined';
     var privateKey = account!.getSecretKey().sublist(0, 32).toBase64();
-    var data = {"schema": "ED25519", "privateKey": privateKey};
+    var data = {"schema": "Ed25519", "privateKey": privateKey};
     return const JsonEncoder.withIndent(' ').convert(data);
   }
 

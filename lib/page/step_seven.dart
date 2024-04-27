@@ -82,7 +82,7 @@ class _StepSevenPageState extends State<StepSevenPage> {
           _text(texts[1]),
           _codeWidget(),
           ActiveButton(
-           provider.requesting? 'Executing': 'Executing TransactionBlock',
+           provider.requesting? 'Executing': 'Execute TransactionBlock',
             onPressed: () async {
               digest = await provider.executeTransactionBlock(context);
               setState(() {});
@@ -112,7 +112,7 @@ class _StepSevenPageState extends State<StepSevenPage> {
           child: Text(
             digest ?? '',
             style: const TextStyle(
-              color: Color(0xFFFFEDCF),
+              color: Color.fromARGB(255, 68, 165, 214),
               fontSize: 15,
               decoration: TextDecoration.underline,
             ),
