@@ -85,12 +85,25 @@ class _StepFourPageState extends State<StepFourPage> {
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.only(bottom: 15),
             color: const Color(0xFFFFEDCF),
-            child: const Text(
-              "Tip: Therefore, it is essential to safeguard the Salt. If lost, users won't be able to recover the address generated with the current Salt.",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 16,
-              ),
+            child: const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Color(0xFF513500),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Therefore, it is essential to safeguard the Salt. If lost, "
+                    "users won't be able to recover the address generated with the current Salt.",
+                    style: TextStyle(
+                      color: Color(0xFF513500),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           _text(

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
@@ -59,7 +58,7 @@ class _StepSixPageState extends State<StepSixPage> {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: true,
+                enable: provider.zkProof.keys.isNotEmpty,
                 onPressed: () {
                   provider.step = provider.step + 1;
                 },
@@ -129,7 +128,6 @@ class _StepSixPageState extends State<StepSixPage> {
   _code1() {
     return const Markdown(
       '```dart\n'
-      '${"import 'package:sui/sui.dart';"}\n'
       '${"import 'package:zklogin/zklogin.dart';"}\n\n'
       'var extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(ephemeralKeyPair.getPublicKey();\n'
       '\n```',
@@ -150,7 +148,7 @@ class _StepSixPageState extends State<StepSixPage> {
       '        "keyClaimName": "sub",\n'
       '    };\n'
       '    final zkProof = await Dio().post("https://prover-dev.mystenlabs.com/v1", data: body);\n'
-      '    return zkProof.data\n'
+      '    return zkProof.data;\n'
       '}\n'
       '\n```',
     );

@@ -44,9 +44,6 @@ class _StepFivePageState extends State<StepFivePage> {
   @override
   void initState() {
     super.initState();
-    provider.address =
-        jwtToAddress(provider.googleIdToken, BigInt.parse(provider.salt));
-    provider.getBalance();
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +70,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set address(String value) {
     _address = value;
-    // notifyListeners();
+    notifyListeners();
   }
 
   String _extendedEphemeralPublicKey = '';
@@ -134,11 +136,11 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map _zkProof = {};
+  Map<String, dynamic> _zkProof = {};
 
-  Map get zkProof => _zkProof;
+  Map<String, dynamic> get zkProof => _zkProof;
 
-  set zkProof(Map value) {
+  set zkProof(Map<String, dynamic> value) {
     _zkProof = value;
     notifyListeners();
   }
@@ -209,7 +211,7 @@ class ZkLoginProvider extends ChangeNotifier {
         'https://prover-dev.mystenlabs.com/v1',
         data: param,
       );
-      zkProof = data.data;
+      zkProof = data.data as Map<String, dynamic>;
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context, e.toString(), seconds: 6);
@@ -217,5 +219,57 @@ class ZkLoginProvider extends ChangeNotifier {
     } finally {
       requesting = false;
     }
+  }
+
+  Future<String?> executeTransactionBlock(BuildContext context) async {
+    String? digest;
+    try {
+      if (requesting) return digest;
+      requesting = true;
+      final txb = TransactionBlock();
+      txb.setSenderIfNotSet(address);
+      final coin = txb.splitCoins(txb.gas, [txb.pureInt(22222)]);
+      txb.transferObjects([coin], txb.pureAddress(address));
+      final sign = await txb.sign(
+        SignOptions(
+          signer: account!.keyPair,
+          client: suiClient,
+        ),
+      );
+      final addressSeed = genAddressSeed(
+        BigInt.parse(salt),
+        'sub',
+        zkProof['sub'].toString(),
+        zkProof['aud'].toString(),
+      );
+      zkProof["addressSeed"] = addressSeed.toString();
+      final zkSign = getZkLoginSignature(
+        ZkLoginSignature(
+          inputs: ZkLoginSignatureInputs.fromJson(zkProof),
+          maxEpoch: maxEpoch,
+          userSignature: base64Decode(sign.signature),
+        ),
+      );
+      final resp = await suiClient.executeTransactionBlock(
+        sign.bytes,
+        [zkSign],
+        options: SuiTransactionBlockResponseOptions(showEffects: true),
+      );
+      if (resp.confirmedLocalExecution == true) {
+        digest = resp.digest;
+        getBalance();
+      } else {
+        if (context.mounted) {
+          showSnackBar(context, "Transaction Send Failed");
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, e.toString(), seconds: 6);
+      }
+    } finally {
+      requesting = false;
+    }
+    return digest;
   }
 }

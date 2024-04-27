@@ -151,7 +151,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
           const SizedBox(height: 15),
           const Markdown(
             '```dart\n'
-            '${"import 'package:sui/sui.dart';"}\n\n'
+            '${"import 'package:zklogin/zklogin.dart';"}\n\n'
             '// Generate Nonce for acquiring JWT\n'
             'const nonce = generateNonce(\n'
             '    ephemeralKeyPair.getPublicKey(),\n'
@@ -279,7 +279,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
     var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
         'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
         '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow';
+        '&flowName=GeneralOAuthFlow&id_token=${provider.googleIdToken}';
 
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
