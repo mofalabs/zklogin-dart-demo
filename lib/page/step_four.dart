@@ -24,7 +24,11 @@ class _StepFourPageState extends State<StepFourPage> {
   void initState() {
     super.initState();
     if (provider.salt.isEmpty) {
-      provider.salt = generateRandomness();
+      WidgetsBinding
+      .instance
+      .addPostFrameCallback((_){ 
+          provider.salt = generateRandomness();
+      });
     }
   }
 
