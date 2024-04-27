@@ -93,7 +93,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: account != null && provider.googleIdToken.isNotEmpty,
+                enable: account != null && provider.jwt.isNotEmpty,
                 onPressed: () {
                   provider.step = provider.step + 1;
                 },
@@ -229,12 +229,12 @@ class _StepTwoPageState extends State<StepTwoPage> {
                   MaterialPageRoute(
                     builder: (context) => GoogleSignInPage(
                       nonce: provider.nonce,
-                      idToken: provider.googleIdToken,
+                      idToken: provider.jwt,
                     ),
                   ),
                 ).then((value) {
                   if (value is String) {
-                    provider.googleIdToken = value;
+                    provider.jwt = value;
                     provider.step = provider.step + 1;
                   }
                 });
@@ -279,13 +279,13 @@ class _StepTwoPageState extends State<StepTwoPage> {
     var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
         'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
         '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=${provider.googleIdToken}';
+        '&flowName=GeneralOAuthFlow&id_token=${provider.jwt}';
 
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
         if (url.toString().startsWith(replaceUrl)) {
           String temp = url!.replaceAll(replaceUrl, '');
-          provider.googleIdToken = temp.substring(0, temp.indexOf('&'));
+          provider.jwt = temp.substring(0, temp.indexOf('&'));
           macOsWebView?.close();
           provider.step = provider.step + 1;
         }

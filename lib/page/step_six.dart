@@ -140,7 +140,7 @@ class _StepSixPageState extends State<StepSixPage> {
       '${"import 'package:dio/dio.dart';"}\n\n'
       'getZkProof() async {\n'
       '    final body = {\n'
-      '        "jwt": googleIdToken,\n'
+      '        "jwt": jwt,\n'
       '        "extendedEphemeralPublicKey": extendedEphemeralPublicKey,\n'
       '        "maxEpoch": maxEpoch,\n'
       '        "jwtRandomness": randomness,\n'

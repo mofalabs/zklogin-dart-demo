@@ -100,14 +100,10 @@ class ZkLoginProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String googleIdToken = '';
-
   getCurrentEpoch() async {
     final result = await suiClient.getLatestSuiSystemState();
     maxEpoch = int.parse(result.epoch);
   }
-
-  /// Sign in with Apple
 
   String _jwt = '';
 
@@ -199,7 +195,7 @@ class ZkLoginProvider extends ChangeNotifier {
     requesting = true;
     try {
       final param = {
-        "jwt": googleIdToken,
+        "jwt": jwt,
         "extendedEphemeralPublicKey": extendedEphemeralPublicKey,
         "maxEpoch": maxEpoch,
         "jwtRandomness": randomness,
@@ -236,11 +232,12 @@ class ZkLoginProvider extends ChangeNotifier {
           client: suiClient,
         ),
       );
+      final jwtJson = decodeJwt(jwt);
       final addressSeed = genAddressSeed(
         BigInt.parse(salt),
         'sub',
-        zkProof['sub'].toString(),
-        zkProof['aud'].toString(),
+        jwtJson['sub'].toString(),
+        jwtJson['aud'].toString(),
       );
       zkProof["addressSeed"] = addressSeed.toString();
       final zkSign = getZkLoginSignature(
@@ -254,6 +251,7 @@ class ZkLoginProvider extends ChangeNotifier {
         sign.bytes,
         [zkSign],
         options: SuiTransactionBlockResponseOptions(showEffects: true),
+        requestType: ExecuteTransaction.WaitForLocalExecution,
       );
       if (resp.confirmedLocalExecution == true) {
         digest = resp.digest;

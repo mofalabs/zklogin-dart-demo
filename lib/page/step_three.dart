@@ -22,14 +22,11 @@ class StepThreePage extends StatefulWidget {
 class _StepThreePageState extends State<StepThreePage> {
   ZkLoginProvider get provider => widget.provider;
 
-  String get googleIdToken => provider.googleIdToken;
-
-  Map jwt = {};
+  String get jwt => provider.jwt;
 
   @override
   void initState() {
     super.initState();
-    jwt = decodeJwt(googleIdToken);
   }
 
   @override
@@ -61,7 +58,7 @@ class _StepThreePageState extends State<StepThreePage> {
               const SizedBox(width: 15),
               BorderButton(
                 'Next',
-                enable: provider.googleIdToken.isNotEmpty,
+                enable: provider.jwt.isNotEmpty,
                 onPressed: () {
                   provider.step = provider.step + 1;
                 },
@@ -89,7 +86,7 @@ class _StepThreePageState extends State<StepThreePage> {
                 const Text('// id Token'),
                 const SizedBox(height: 5),
                 Text(
-                  googleIdToken,
+                  jwt,
                   style: TextStyle(
                     height: 1.4,
                     color: Colors.green.withOpacity(0.9),
@@ -105,7 +102,7 @@ class _StepThreePageState extends State<StepThreePage> {
           const Markdown(
             '```dart\n'
             '${"import 'package:sui/sui.dart';"}\n\n'
-            'Map jwt = decodeJwt(googleIdToken);\n'
+            'Map jwt = decodeJwt(jwt);\n'
             '\n```',
           ),
           const Text(
@@ -114,7 +111,7 @@ class _StepThreePageState extends State<StepThreePage> {
           ),
           Markdown(
             '```json \n'
-            '${const JsonEncoder.withIndent('  ').convert(jwt)}\n'
+            '${const JsonEncoder.withIndent('  ').convert(decodeJwt(jwt))}\n'
             '\n```',
           ),
         ],

@@ -151,7 +151,7 @@ class _StepFivePageState extends State<StepFivePage> {
               ? null
               : () {
                   provider.address = jwtToAddress(
-                    provider.googleIdToken,
+                    provider.jwt,
                     BigInt.parse(provider.salt),
                   );
                   provider.getBalance();
