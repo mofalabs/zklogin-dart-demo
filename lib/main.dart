@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'Assemble zkLogin signature',
   ];
 
-  bool get isMobile => Platform.isIOS || Platform.isAndroid;
+  bool get isMobile => !kIsWeb && (Platform.isIOS || Platform.isAndroid);
 
   @override
   Widget build(BuildContext context) {
