@@ -36,6 +36,11 @@ class _StepSevenPageState extends State<StepSevenPage> {
   }
 
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) super.setState(fn);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _contentView();
   }
@@ -82,7 +87,7 @@ class _StepSevenPageState extends State<StepSevenPage> {
           _text(texts[1]),
           _codeWidget(),
           ActiveButton(
-           provider.requesting? 'Executing': 'Execute TransactionBlock',
+            provider.requesting ? 'Executing' : 'Execute TransactionBlock',
             onPressed: () async {
               digest = await provider.executeTransactionBlock(context);
               setState(() {});
@@ -114,6 +119,7 @@ class _StepSevenPageState extends State<StepSevenPage> {
             style: const TextStyle(
               color: Color.fromARGB(255, 68, 165, 214),
               fontSize: 15,
+              fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
             ),
           ),
@@ -167,11 +173,12 @@ class _StepSevenPageState extends State<StepSevenPage> {
       '            client: suiClient,\n'
       '        ),\n'
       '    );\n'
+      '    final jwtJson = decodeJwt(jwt);\n'
       '    final addressSeed = genAddressSeed(\n'
       '        BigInt.parse(salt),\n'
       '        "sub"\n'
-      '        zkProof["sub"].toString(),\n'
-      '        zkProof["aud"].toString(),\n'
+      '        jwtJson["sub"].toString(),\n'
+      '        jwtJson["aud"].toString(),\n'
       '    );\n'
       '    zkProof["addressSeed"] = addressSeed.toString();\n'
       '    final zkSign = getZkLoginSignature(\n'
