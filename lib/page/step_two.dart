@@ -201,9 +201,10 @@ class _StepTwoPageState extends State<StepTwoPage> {
     return Wrap(
       alignment: WrapAlignment.start,
       runAlignment: WrapAlignment.center,
+      spacing: 15,
       runSpacing: 15,
       children: [
-        if (!kIsWeb && Platform.isIOS)
+        if (Platform.isIOS || Platform.isMacOS)
           _signInButton(context, 'apple.svg', 'Apple'),
         _signInButton(context, 'google.svg', 'Google'),
       ],
