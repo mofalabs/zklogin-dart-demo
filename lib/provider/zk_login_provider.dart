@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
+import 'package:sui_dart_zklogin_demo/data/constants.dart';
 import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
 import 'package:zklogin/zklogin.dart';
 
@@ -147,6 +148,13 @@ class ZkLoginProvider extends ChangeNotifier {
     _zkProof = value;
     notifyListeners();
   }
+
+  String get googleLoginUrl =>
+      'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
+      'client_id=${Constant.googleClientId}&response_type=id_token'
+      '&redirect_uri=${Constant.redirectUrl}&scope=openid&nonce=$nonce'
+      '&service=lso&o2v=2&theme=mn&ddm=0&flowName=GeneralOAuthFlow'
+      '&id_token=$jwt}';
 
   getBalance() {
     if (address.isNotEmpty) {

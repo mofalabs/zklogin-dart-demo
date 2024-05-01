@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_macos_webview/flutter_macos_webview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart' hide generateNonce;
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
+import 'package:sui_dart_zklogin_demo/data/constants.dart';
 import 'package:sui_dart_zklogin_demo/page/google_sign_in_page.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
@@ -225,14 +225,13 @@ class _StepTwoPageState extends State<StepTwoPage> {
                 provider.userIdentifier = result.userIdentifier ?? '';
                 provider.email = result.email ?? '';
               } else {
-                kIsWeb || Platform.isMacOS
+                Platform.isMacOS
                     ? _showMacOsWeb()
                     : Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => GoogleSignInPage(
-                            nonce: provider.nonce,
-                            idToken: provider.jwt,
+                            provider: provider,
                           ),
                         ),
                       ).then((value) {
@@ -275,22 +274,17 @@ class _StepTwoPageState extends State<StepTwoPage> {
   }
 
   _showMacOsWeb() async {
-    String redirectUrl = 'https%3A%2F%2Fsui-dart-zklogin.pages.dev';
-    String replaceUrl = 'https://sui-dart-zklogin.pages.dev/#id_token=';
-    var clientId =
-        '953150391626-lhuukaihevdfdnv6nr085njniodrlp72.apps.googleusercontent.com';
-    var url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
-        'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
-        '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=${provider.jwt}';
-
     macOsWebView = FlutterMacOSWebView(
       onPageFinished: (url) async {
-        if (url.toString().startsWith(replaceUrl)) {
-          String temp = url!.replaceAll(replaceUrl, '');
-          provider.jwt = temp.substring(0, temp.indexOf('&'));
-          macOsWebView?.close();
-          provider.step = provider.step + 1;
+        if (url.toString().startsWith(Constant.website)) {
+          if (url.toString().startsWith(Constant.replaceUrl)) {
+            String temp = url!.replaceAll(Constant.replaceUrl, '');
+            provider.jwt = temp.substring(0, temp.indexOf('&'));
+            macOsWebView?.close();
+            provider.step = provider.step + 1;
+          } else {
+            macOsWebView?.close();
+          }
         }
       },
       onWebResourceError: (err) {
@@ -301,7 +295,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
     );
 
     await macOsWebView?.open(
-      url: url,
+      url: provider.googleLoginUrl,
       presentationStyle: PresentationStyle.modal,
       size: const Size(900.0, 600.0),
       userAgent: 'Mofa Web3',

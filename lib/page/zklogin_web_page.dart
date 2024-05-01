@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sui/sui.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
+import 'package:sui_dart_zklogin_demo/data/constants.dart';
 import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
 import 'package:sui_dart_zklogin_demo/page/step_five.dart';
 import 'package:sui_dart_zklogin_demo/page/step_four.dart';
@@ -43,9 +44,8 @@ class _ZkLoginPageState extends State<ZkLoginPage> {
   }
 
   _recoverCacheData() {
-    String replaceUrl = 'https://sui-dart-zklogin.pages.dev/#id_token=';
     final url = html.window.location.href;
-    if (url.startsWith(replaceUrl)) {
+    if (url.startsWith(Constant.replaceUrl)) {
       var keyPair = ZkLoginStorageManager.getTemporaryCacheKeyPair();
       var maxEpoch = ZkLoginStorageManager.getTemporaryMaxEpoch();
       var nonce = ZkLoginStorageManager.getTemporaryCacheNonce();
@@ -55,7 +55,7 @@ class _ZkLoginPageState extends State<ZkLoginPage> {
           maxEpoch > 0 &&
           nonce.isNotEmpty &&
           randomness.isNotEmpty) {
-        String temp = url.replaceAll(replaceUrl, '');
+        String temp = url.replaceAll(Constant.replaceUrl, '');
         provider.jwt = temp.substring(0, temp.indexOf('&'));
         provider.nonce = nonce;
         provider.maxEpoch = maxEpoch;
@@ -71,6 +71,7 @@ class _ZkLoginPageState extends State<ZkLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return ChangeNotifierProvider(
       create: (_) => provider,
       child: Consumer<ZkLoginProvider>(
@@ -80,9 +81,9 @@ class _ZkLoginPageState extends State<ZkLoginPage> {
             body: SingleChildScrollView(
               controller: controller,
               child: Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 30,
+                margin: EdgeInsets.symmetric(
+                  vertical: width < 600 ? 20 : 40,
+                  horizontal: width < 600 ? 15 : 30,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

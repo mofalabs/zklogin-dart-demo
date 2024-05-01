@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:sui_dart_zklogin_demo/data/constants.dart';
+import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 
 class GoogleSignInPage extends StatefulWidget {
-  final String nonce;
-  final String idToken;
+  final ZkLoginProvider provider;
 
   const GoogleSignInPage({
     super.key,
-    required this.nonce,
-    required this.idToken,
+    required this.provider,
   });
 
   @override
@@ -16,21 +16,11 @@ class GoogleSignInPage extends StatefulWidget {
 }
 
 class _GoogleSignInPageState extends State<GoogleSignInPage> {
-  bool isLoading = false;
-  String redirectUrl = 'https%3A%2F%2Fsui-dart-zklogin.pages.dev';
-  String replaceUrl = 'https://sui-dart-zklogin.pages.dev/#id_token=';
-  var clientId =
-      '953150391626-lhuukaihevdfdnv6nr085njniodrlp72.apps.googleusercontent.com';
-
-  var url = '';
+  ZkLoginProvider get provider => widget.provider;
 
   @override
   void initState() {
     super.initState();
-    url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
-        'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
-        '&scope=openid&nonce=${widget.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-        '&flowName=GeneralOAuthFlow&id_token=${widget.idToken}';
   }
 
   @override
@@ -38,7 +28,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Google Sign In')),
       body: InAppWebView(
-        initialUrlRequest: URLRequest(url: WebUri(url)),
+        initialUrlRequest: URLRequest(url: WebUri(provider.googleLoginUrl)),
         initialSettings: InAppWebViewSettings(
           javaScriptEnabled: true,
           useShouldOverrideUrlLoading: true,
@@ -51,10 +41,14 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
         ),
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           var uri = navigationAction.request.url;
-          if (uri.toString().startsWith(replaceUrl)) {
-            String temp = uri.toString().replaceAll(replaceUrl, '');
-            temp = temp.substring(0, temp.indexOf('&'));
-            Navigator.pop(context, temp);
+          if (uri.toString().startsWith(Constant.website)) {
+            if (uri.toString().startsWith(Constant.replaceUrl)) {
+              String temp = uri.toString().replaceAll(Constant.replaceUrl, '');
+              temp = temp.substring(0, temp.indexOf('&'));
+              Navigator.pop(context, temp);
+            } else {
+              Navigator.pop(context);
+            }
             return NavigationActionPolicy.CANCEL;
           }
           return NavigationActionPolicy.ALLOW;

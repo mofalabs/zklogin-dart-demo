@@ -221,15 +221,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
                 provider.userIdentifier = result.userIdentifier ?? '';
                 provider.email = result.email ?? '';
               } else {
-                String redirectUrl = 'https%3A%2F%2Fsui-dart-zklogin.pages.dev';
-                var clientId =
-                    '953150391626-lhuukaihevdfdnv6nr085njniodrlp72.apps.googleusercontent.com';
-                var url =
-                    'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
-                    'client_id=$clientId&response_type=id_token&redirect_uri=$redirectUrl'
-                    '&scope=openid&nonce=${provider.nonce}&service=lso&o2v=2&theme=mn&ddm=0'
-                    '&flowName=GeneralOAuthFlow&id_token=${provider.jwt}';
-                html.window.location.href = url;
+                html.window.location.href = provider.googleLoginUrl;
               }
             },
       style: ElevatedButton.styleFrom(
