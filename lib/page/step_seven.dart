@@ -176,7 +176,7 @@ class _StepSevenPageState extends State<StepSevenPage> {
       '    final jwtJson = decodeJwt(jwt);\n'
       '    final addressSeed = genAddressSeed(\n'
       '        BigInt.parse(salt),\n'
-      '        "sub"\n'
+      '        "sub",\n'
       '        jwtJson["sub"].toString(),\n'
       '        jwtJson["aud"].toString(),\n'
       '    );\n'

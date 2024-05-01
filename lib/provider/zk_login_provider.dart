@@ -14,7 +14,12 @@ class ZkLoginProvider extends ChangeNotifier {
 
   SuiAccount? _account;
 
-  SuiAccount? get account => _account;
+  SuiAccount? get account {
+    if (_account != null) return _account;
+    final privKey = ZkLoginStorageManager.getTemporaryCacheKeyPair();
+    if (privKey.isEmpty) return null;
+    return SuiAccount.fromPrivateKey(privKey, SignatureScheme.Ed25519);
+  }
 
   set account(SuiAccount? value) {
     _account = value;

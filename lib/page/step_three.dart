@@ -83,7 +83,7 @@ class _StepThreePageState extends State<StepThreePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('// id Token'),
+                const Text('// JWT'),
                 const SizedBox(height: 5),
                 Text(
                   jwt,
@@ -96,7 +96,7 @@ class _StepThreePageState extends State<StepThreePage> {
             ),
           ),
           const Text(
-            'get JWT Payload',
+            'Decode JWT Payload',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const Markdown(
@@ -111,7 +111,7 @@ class _StepThreePageState extends State<StepThreePage> {
           ),
           Markdown(
             '```json \n'
-            '${const JsonEncoder.withIndent('  ').convert(decodeJwt(jwt))}\n'
+            '${jwt.isNotEmpty ? const JsonEncoder.withIndent('  ').convert(decodeJwt(jwt)) : ''}\n'
             '\n```',
           ),
         ],

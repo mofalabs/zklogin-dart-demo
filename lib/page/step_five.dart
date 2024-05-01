@@ -109,7 +109,7 @@ class _StepFivePageState extends State<StepFivePage> {
     return const Markdown(
       '```dart\n'
       '${"import 'package:zklogin/zklogin.dart';"}\n\n'
-      '/// [jwt] google id_token\n'
+      '/// [jwt] google id_token or apple identityToken\n'
       'var address = jwtToAddress(jwt, BigInt.parse(salt));\n'
       '\n```',
     );

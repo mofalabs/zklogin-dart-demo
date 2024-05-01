@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ZkLoginStorageManager {
@@ -53,4 +56,13 @@ class ZkLoginStorageManager {
 
   static int getTemporaryMaxEpoch() =>
       _sharedPreferences.getInt(temporaryCacheMaxEpoch) ?? 0;
+
+  static String location() {
+    if (kIsWeb) return 'LocalStorage';
+    if (Platform.isIOS || Platform.isMacOS) return 'NSUserDefaults';
+    if (Platform.isAndroid) return 'SharedPreferences';
+    if (Platform.isLinux) return 'XDG_DATA_HOME directory';
+    if (Platform.isWindows) return 'Roaming AppData directory';
+    throw ArgumentError('unsupport');
+  }
 }

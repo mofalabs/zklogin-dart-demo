@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sui/cryptography/ed25519_keypair.dart';
 import 'package:sui/sui_account.dart';
 import 'package:sui_dart_zklogin_demo/common/theme.dart';
+import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
 import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
 import 'package:sui_dart_zklogin_demo/util/extension.dart';
 import 'package:sui_dart_zklogin_demo/widget/button.dart';
@@ -83,9 +84,9 @@ class StepOnePage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15),
-          const Text(
-            'Stored in the browser session. (Session Storage)',
-            style: TextStyle(
+          Text(
+            'Stored in the ${ZkLoginStorageManager.location()}',
+            style: const TextStyle(
               color: AppTheme.textColor2,
               fontSize: 15,
             ),
