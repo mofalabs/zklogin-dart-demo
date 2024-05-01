@@ -17,10 +17,10 @@ class GoogleSignInPage extends StatefulWidget {
 
 class _GoogleSignInPageState extends State<GoogleSignInPage> {
   bool isLoading = false;
-  String redirectUrl = 'https%3A%2F%2Fmofalabs.com';
-  String replaceUrl = 'https://mofalabs.com/#id_token=';
+  String redirectUrl = 'https%3A%2F%2Fsui-dart-zklogin.pages.dev';
+  String replaceUrl = 'https://sui-dart-zklogin.pages.dev/#id_token=';
   var clientId =
-      '953150391626-q6id9af1j52h14lu226d7n40lrgrnbj7.apps.googleusercontent.com';
+      '953150391626-lhuukaihevdfdnv6nr085njniodrlp72.apps.googleusercontent.com';
 
   var url = '';
 

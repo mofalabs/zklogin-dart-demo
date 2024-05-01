@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
+import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
 import 'package:zklogin/zklogin.dart';
 
 class ZkLoginProvider extends ChangeNotifier {
@@ -16,6 +17,9 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set account(SuiAccount? value) {
     _account = value;
+    ZkLoginStorageManager.setTemporaryCacheKeyPair(
+      value?.privateKeyHex() ?? '',
+    );
     notifyListeners();
   }
 
@@ -34,6 +38,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set maxEpoch(int value) {
     _maxEpoch = value;
+    ZkLoginStorageManager.setTemporaryMaxEpoch(value);
     notifyListeners();
   }
 
@@ -43,6 +48,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set randomness(String value) {
     _randomness = value;
+    ZkLoginStorageManager.setTemporaryRandomness(value);
     notifyListeners();
   }
 
@@ -52,6 +58,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   set nonce(String value) {
     _nonce = value;
+    ZkLoginStorageManager.setTemporaryCacheNonce(nonce);
     notifyListeners();
   }
 
@@ -102,7 +109,7 @@ class ZkLoginProvider extends ChangeNotifier {
 
   getCurrentEpoch() async {
     final result = await suiClient.getLatestSuiSystemState();
-    maxEpoch = int.parse(result.epoch);
+    maxEpoch = int.parse(result.epoch) + 10;
   }
 
   String _jwt = '';
