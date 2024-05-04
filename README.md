@@ -18,5 +18,5 @@ flutter run -d <DEVICE_ID>
 
 ### Dependencies
 
-- [Sui Dart zkLogin](https://github.com/mofalabs/zklogin)
+- [zkLogin Dart SDK](https://github.com/mofalabs/zklogin)
 - [Sui Dart SDK](https://github.com/mofalabs/sui)

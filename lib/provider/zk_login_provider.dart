@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
@@ -158,7 +159,7 @@ class ZkLoginProvider extends ChangeNotifier {
   String get googleLoginUrl =>
       'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?'
       'client_id=${Constant.googleClientId}&response_type=id_token'
-      '&redirect_uri=${ Platform.isMacOS ? Constant.redirectUrl : Uri.encodeComponent(Constant.redirectUrl)}&scope=openid&nonce=$nonce'
+      '&redirect_uri=${ kIsWeb ? Uri.encodeComponent(Constant.redirectUrl) : Constant.redirectUrl}&scope=openid&nonce=$nonce'
       '&service=lso&o2v=2&theme=mn&ddm=0&flowName=GeneralOAuthFlow'
       '&id_token=$jwt}';
 
