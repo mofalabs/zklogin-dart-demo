@@ -1,6 +1,6 @@
 {
-    "name": "sui_dart_zklogin_demo",
-    "short_name": "sui_dart_zklogin_demo",
+    "name": "zklogin_dart_demo",
+    "short_name": "zklogin_dart_demo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
