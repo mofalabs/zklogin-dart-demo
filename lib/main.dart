@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
-import 'package:sui_dart_zklogin_demo/page/zklogin_page.dart'
-    if (dart.library.html) 'package:sui_dart_zklogin_demo/page/zklogin_web_page.dart';
+import 'package:zklogin_dart_demo/data/storage_manager.dart';
+import 'package:zklogin_dart_demo/page/zklogin_page.dart'
+    if (dart.library.html) 'package:zklogin_dart_demo/page/zklogin_web_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

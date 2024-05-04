@@ -1,4 +1,4 @@
-name: sui_dart_zklogin_demo
+name: zklogin_dart_demo
 description: A cross-platform zkLogin Demo App for Web, Mobile and Desktop.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

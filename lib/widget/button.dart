@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sui_dart_zklogin_demo/common/theme.dart';
+import 'package:zklogin_dart_demo/common/theme.dart';
 
 class ActiveButton extends StatelessWidget {
   final Function? onPressed;

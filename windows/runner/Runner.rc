@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.mofa" "\0"
-            VALUE "FileDescription", "sui_dart_zklogin_demo" "\0"
+            VALUE "FileDescription", "zklogin_dart_demo" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "sui_dart_zklogin_demo" "\0"
+            VALUE "InternalName", "zklogin_dart_demo" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.mofa. All rights reserved." "\0"
-            VALUE "OriginalFilename", "sui_dart_zklogin_demo.exe" "\0"
-            VALUE "ProductName", "sui_dart_zklogin_demo" "\0"
+            VALUE "OriginalFilename", "zklogin_dart_demo.exe" "\0"
+            VALUE "ProductName", "zklogin_dart_demo" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

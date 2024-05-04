@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sui/cryptography/ed25519_keypair.dart';
 import 'package:sui/sui_account.dart';
-import 'package:sui_dart_zklogin_demo/common/theme.dart';
-import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
-import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
-import 'package:sui_dart_zklogin_demo/util/extension.dart';
-import 'package:sui_dart_zklogin_demo/widget/button.dart';
-import 'package:sui_dart_zklogin_demo/widget/mark_down.dart';
+import 'package:zklogin_dart_demo/common/theme.dart';
+import 'package:zklogin_dart_demo/data/storage_manager.dart';
+import 'package:zklogin_dart_demo/provider/zk_login_provider.dart';
+import 'package:zklogin_dart_demo/util/extension.dart';
+import 'package:zklogin_dart_demo/widget/button.dart';
+import 'package:zklogin_dart_demo/widget/mark_down.dart';
 
 class StepOnePage extends StatelessWidget {
   final ZkLoginProvider provider;

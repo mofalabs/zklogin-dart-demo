@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
-import 'package:sui_dart_zklogin_demo/data/constants.dart';
-import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
+import 'package:zklogin_dart_demo/data/constants.dart';
+import 'package:zklogin_dart_demo/data/storage_manager.dart';
 import 'package:zklogin/zklogin.dart';
 
 class ZkLoginProvider extends ChangeNotifier {

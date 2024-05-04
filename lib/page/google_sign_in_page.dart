@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:sui_dart_zklogin_demo/data/constants.dart';
-import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
+import 'package:zklogin_dart_demo/data/constants.dart';
+import 'package:zklogin_dart_demo/provider/zk_login_provider.dart';
 
 class GoogleSignInPage extends StatefulWidget {
   final ZkLoginProvider provider;

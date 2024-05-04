@@ -1,4 +1,4 @@
-package com.mofa.sui_dart_zklogin_demo
+package com.mofa.zklogin_dart_demo
 
 import io.flutter.embedding.android.FlutterActivity
 

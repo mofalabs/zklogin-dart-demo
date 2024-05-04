@@ -3,17 +3,17 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sui/sui.dart';
-import 'package:sui_dart_zklogin_demo/common/theme.dart';
-import 'package:sui_dart_zklogin_demo/data/constants.dart';
-import 'package:sui_dart_zklogin_demo/data/storage_manager.dart';
-import 'package:sui_dart_zklogin_demo/page/step_five.dart';
-import 'package:sui_dart_zklogin_demo/page/step_four.dart';
-import 'package:sui_dart_zklogin_demo/page/step_one.dart';
-import 'package:sui_dart_zklogin_demo/page/step_seven.dart';
-import 'package:sui_dart_zklogin_demo/page/step_six.dart';
-import 'package:sui_dart_zklogin_demo/page/step_three.dart';
-import 'package:sui_dart_zklogin_demo/page/step_two_web.dart';
-import 'package:sui_dart_zklogin_demo/provider/zk_login_provider.dart';
+import 'package:zklogin_dart_demo/common/theme.dart';
+import 'package:zklogin_dart_demo/data/constants.dart';
+import 'package:zklogin_dart_demo/data/storage_manager.dart';
+import 'package:zklogin_dart_demo/page/step_five.dart';
+import 'package:zklogin_dart_demo/page/step_four.dart';
+import 'package:zklogin_dart_demo/page/step_one.dart';
+import 'package:zklogin_dart_demo/page/step_seven.dart';
+import 'package:zklogin_dart_demo/page/step_six.dart';
+import 'package:zklogin_dart_demo/page/step_three.dart';
+import 'package:zklogin_dart_demo/page/step_two_web.dart';
+import 'package:zklogin_dart_demo/provider/zk_login_provider.dart';
 
 class ZkLoginPage extends StatefulWidget {
   const ZkLoginPage({super.key});
