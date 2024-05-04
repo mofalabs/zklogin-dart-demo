@@ -1,16 +1,25 @@
-# sui-dart-zklogin-demo
+# zkLogin
 
-A new Flutter project.
+A cross-platform Sui Dart zkLogin Demo App for Web, Mobile and Desktop.
 
-## Getting Started
+> If you are using Sui TypeScript SDK, check out [zkLogin demo](https://github.com/jovicheng/sui-zklogin-demo).
 
-This project is a starting point for a Flutter application.
+### zkLogin Demo
 
-A few resources to get you started if this is your first Flutter project:
+#### Web
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://sui-dart-zklogin-demo.pages.dev
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Run on Web, Mobile, Desktop
+
+```bash
+cd sui-dart-zklogin-demo
+flutter pub get
+flutter devices
+flutter run -d <DEVICE_ID>
+```
+
+### Dependencies
+
+- [Sui Dart zkLogin](https://github.com/mofalabs/zklogin)
+- [Sui Dart SDK](https://github.com/mofalabs/sui)
