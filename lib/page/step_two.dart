@@ -296,7 +296,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
 
     await macOsWebView?.open(
       url: provider.googleLoginUrl,
-      presentationStyle: PresentationStyle.modal,
+      presentationStyle: PresentationStyle.sheet,
       size: const Size(900.0, 600.0),
       userAgent: 'Mofa Web3',
     );
