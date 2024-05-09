@@ -213,7 +213,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
 
   _signInButton(BuildContext context, String svg, String name) {
     return ElevatedButton(
-      onPressed: provider.nonce.isEmpty
+      onPressed: provider.nonce.isEmpty || provider.jwt.isNotEmpty
           ? null
           : () async {
               if (name == 'Apple') {
@@ -224,6 +224,7 @@ class _StepTwoPageState extends State<StepTwoPage> {
                 provider.jwt = result.identityToken ?? '';
                 provider.userIdentifier = result.userIdentifier ?? '';
                 provider.email = result.email ?? '';
+                provider.step = provider.step + 1;
               } else {
                 Platform.isMacOS
                     ? _showMacOsWeb()
