@@ -42,7 +42,7 @@ dependencies:
   another_flushbar: ^1.12.30
   provider: ^6.1.1
   flutter_svg: ^2.0.9
-  sign_in_with_apple: ^5.0.0
+  sign_in_with_apple: ^6.1.0
   flutter_inappwebview: ^6.0.0
   flutter_macos_webview: ^0.0.6
   dio: ^5.4.3+1

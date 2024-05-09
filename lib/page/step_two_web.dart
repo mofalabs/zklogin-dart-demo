@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart' hide generateNonce;
 import 'package:sui/sui.dart';
 import 'package:zklogin_dart_demo/common/theme.dart';
+import 'package:zklogin_dart_demo/data/constants.dart';
 import 'package:zklogin_dart_demo/provider/zk_login_provider.dart';
 import 'package:zklogin_dart_demo/widget/button.dart';
 import 'package:zklogin_dart_demo/widget/mark_down.dart';
@@ -200,8 +201,9 @@ class _StepTwoPageState extends State<StepTwoPage> {
       alignment: WrapAlignment.start,
       runAlignment: WrapAlignment.center,
       runSpacing: 15,
+      spacing: 15,
       children: [
-        //_signInButton(context, 'apple.svg', 'Apple'),
+        _signInButton(context, 'apple.svg', 'Apple'),
         _signInButton(context, 'google.svg', 'Google'),
       ],
     );
@@ -209,17 +211,23 @@ class _StepTwoPageState extends State<StepTwoPage> {
 
   _signInButton(BuildContext context, String svg, String name) {
     return ElevatedButton(
-      onPressed: provider.nonce.isEmpty
+      onPressed: provider.nonce.isEmpty || provider.jwt.isNotEmpty
           ? null
           : () async {
               if (name == 'Apple') {
                 final result = await SignInWithApple.getAppleIDCredential(
                   scopes: [AppleIDAuthorizationScopes.email],
                   nonce: provider.nonce,
+                  // only for web
+                  webAuthenticationOptions: WebAuthenticationOptions(
+                    clientId: 'com.mofalabs.zklogin-dart-demo',
+                    redirectUri: Uri.parse(Constant.redirectUrl)
+                  )
                 );
                 provider.jwt = result.identityToken ?? '';
                 provider.userIdentifier = result.userIdentifier ?? '';
                 provider.email = result.email ?? '';
+                provider.step = provider.step + 1;
               } else {
                 html.window.location.href = provider.googleLoginUrl;
               }
