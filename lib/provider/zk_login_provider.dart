@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sui/builder/transaction.dart';
 import 'package:sui/sui.dart';
 import 'package:sui/types/faucet.dart';
 import 'package:zklogin_dart_demo/data/constants.dart';
@@ -244,7 +244,7 @@ class ZkLoginProvider extends ChangeNotifier {
     try {
       if (requesting) return digest;
       requesting = true;
-      final txb = TransactionBlock();
+      final txb = Transaction();
       txb.setSenderIfNotSet(address);
       final coin = txb.splitCoins(txb.gas, [txb.pureInt(22222)]);
       txb.transferObjects([coin], txb.pureAddress(address));
